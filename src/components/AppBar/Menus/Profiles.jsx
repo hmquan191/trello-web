@@ -29,7 +29,7 @@ function Profiles() {
           aria-expanded={open ? "true" : undefined}
         >
           <Avatar
-            sx={{ width: 30, height: 30 }}
+            sx={{ width: 40, height: 40 }}
             alt="avatar"
             src="src\assets\wendyyyyyyyy.png"
           />
