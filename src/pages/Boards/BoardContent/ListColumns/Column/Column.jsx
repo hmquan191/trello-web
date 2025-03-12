@@ -17,11 +17,17 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 function Column({ column }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: column._id,
-      data: { ...column },
-    });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: column._id,
+    data: { ...column },
+  });
 
   const dndKitColumnStyles = {
     // touchAction: "none",
@@ -29,6 +35,8 @@ function Column({ column }) {
     // FIX BUG BẰNG CSS.Transform.toString() THÀNH CSS.Translate như bên dưới
     transform: CSS.Translate.toString(transform),
     transition,
+    height: "100%",
+    opacity: isDragging ? 0.5 : undefined,
   };
 
   // drop down menu
@@ -44,76 +52,75 @@ function Column({ column }) {
   // sap xep card
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, "_id");
   return (
-    <Box
-      ref={setNodeRef}
-      style={dndKitColumnStyles}
-      {...attributes}
-      {...listeners}
-      sx={{
-        minWidth: "300px",
-        maxWidth: "300px",
-        backgroundColor: (theme) => {
-          return theme.palette.mode === "dark" ? "#333643" : "#ebecf0";
-        },
-        ml: 2, //margin left
-        borderRadius: "6px",
-        height: "fit-content", // fit theo content hien co
-        maxHeight: (theme) =>
-          `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`,
-      }}
-    >
-      {/* Box column header */}
+    <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       <Box
+        {...listeners}
         sx={{
-          height: (theme) => theme.trello.columnHeaderHeight,
-          p: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          minWidth: "300px",
+          maxWidth: "300px",
+          backgroundColor: (theme) => {
+            return theme.palette.mode === "dark" ? "#333643" : "#ebecf0";
+          },
+          ml: 2, //margin left
+          borderRadius: "6px",
+          height: "fit-content", // fit theo content hien co
+          maxHeight: (theme) =>
+            `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`,
         }}
       >
-        <Typography
-          variant="h6"
+        {/* Box column header */}
+        <Box
           sx={{
-            fontSize: "1rem",
-            fontWeight: "bold",
-            cursor: "pointer",
+            height: (theme) => theme.trello.columnHeaderHeight,
+            p: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          {column?.title}
-        </Typography>
-        <Box>
-          <Tooltip title="More options">
-            <ExpandMoreIcon
-              sx={{ color: "text.primary", cusor: "pointer" }}
-              id="basic-column-dropdown"
-              aria-controls={open ? "basic-menu-column-dropdown" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            />
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: "1rem",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            {column?.title}
+          </Typography>
+          <Box>
+            <Tooltip title="More options">
+              <ExpandMoreIcon
+                sx={{ color: "text.primary", cusor: "pointer" }}
+                id="basic-column-dropdown"
+                aria-controls={open ? "basic-menu-column-dropdown" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              />
+            </Tooltip>
+          </Box>
+        </Box>
+
+        {/*list card */}
+        <ListCards cards={orderedCards} />
+        {/* Box footer */}
+        <Box
+          sx={{
+            height: (theme) => theme.trello.columnFooterHeight,
+            p: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button startIcon={<AddCardIcon />}>Add new card</Button>
+          <Tooltip title="Drag to modify">
+            <DragHandleIcon sx={{ cursor: "pointer" }} />
           </Tooltip>
         </Box>
       </Box>
-
-      {/*list card */}
-      <ListCards cards={orderedCards} />
-      {/* Box footer */}
-      <Box
-        sx={{
-          height: (theme) => theme.trello.columnFooterHeight,
-          p: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Button startIcon={<AddCardIcon />}>Add new card</Button>
-        <Tooltip title="Drag to modify">
-          <DragHandleIcon sx={{ cursor: "pointer" }} />
-        </Tooltip>
-      </Box>
-    </Box>
+    </div>
   );
 }
 

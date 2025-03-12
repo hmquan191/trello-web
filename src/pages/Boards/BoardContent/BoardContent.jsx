@@ -11,8 +11,17 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
+  DragOverlay,
+  defaultDropAnimationSideEffects,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
+import Column from "./ListColumns/Column/Column";
+import TrelloCard from "./ListColumns/Column/ListCards/Card/Card";
+
+const ACTIVE_DRAG_ITEM_TYPE = {
+  COLUMN: "ACTIVE_DRAG_ITEM_TYPE_COLUMN",
+  CARD: "ACTIVE_DRAG_ITEM_TYPE_CARD",
+};
 
 function BoardContent({ board }) {
   const pointerSensor = useSensor(PointerSensor, {
@@ -23,7 +32,7 @@ function BoardContent({ board }) {
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: { distance: 10 },
   });
-  // nhan giu 250ms va dung sai cua cam ung (de hieu la chenh lech 5px) thi kich hoat event keo tha
+  // nhan giu 250ms va dung sai cua cam ung 500px thi kich hoat event keo tha
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: { delay: 250, tolerance: 500 },
   });
@@ -32,6 +41,10 @@ function BoardContent({ board }) {
   const sensors = useSensors(mouseSensor, touchSensor);
 
   const [orderedColumnsState, setOrderedColumnsState] = useState([]);
+
+  const [activeDragItemId, setActiveDragItemId] = useState(null);
+  const [activeDragItemType, setActiveDragItemType] = useState(null);
+  const [activeDragItemData, setActiveDragItemData] = useState(null);
 
   useEffect(() => {
     const orderedColumns = mapOrder(
@@ -42,6 +55,20 @@ function BoardContent({ board }) {
     setOrderedColumnsState(orderedColumns);
   }, [board]); // [board] o cuoi: neu co thay doi thi cap nhat lai
 
+  // Trigger khi bat dau keo phan tu (Drag)
+  const handleDragStart = (event) => {
+    // console.log("handleDragStart: ", event);
+    setActiveDragItemId(event?.active?.id);
+    setActiveDragItemType(
+      // neu co tontai columnId thi day la Card va truong hop con lai la Column
+      event?.active?.data?.current?.columnId
+        ? ACTIVE_DRAG_ITEM_TYPE.CARD
+        : ACTIVE_DRAG_ITEM_TYPE.COLUMN
+    );
+    setActiveDragItemData(event?.active?.data?.current);
+  };
+
+  // Trigger khi ket thuc keo mot phan tu => hanh dong tha ra (Drop)
   const handleDragEnd = (event) => {
     console.log("handleDragEnd: ", event);
     const { active, over } = event;
@@ -74,9 +101,28 @@ function BoardContent({ board }) {
       // cap nhat lai state columns ban dau sau khi da keo tha
       setOrderedColumnsState(dndOrderedColumns);
     }
+
+    // click vao k di chuyen nua thi tra ve null
+    setActiveDragItemId(null);
+    setActiveDragItemType(null);
+    setActiveDragItemData(null);
+  };
+
+  const customDropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: "0.5",
+        },
+      },
+    }),
   };
   return (
-    <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      sensors={sensors}
+    >
       <Box
         sx={{
           backgroundColor: (theme) => {
@@ -88,6 +134,15 @@ function BoardContent({ board }) {
         }}
       >
         <ListColumns columns={orderedColumnsState} />
+        <DragOverlay dropAnimation={customDropAnimation}>
+          {!activeDragItemType && null}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN && (
+            <Column column={activeDragItemData} />
+          )}
+          {activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD && (
+            <TrelloCard card={activeDragItemData} />
+          )}
+        </DragOverlay>
       </Box>
     </DndContext>
   );
