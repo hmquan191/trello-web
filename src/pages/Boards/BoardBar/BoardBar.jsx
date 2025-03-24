@@ -10,6 +10,7 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { capitalizeFirstLetter } from "~/utils/formatters";
+import Tooltip from "@mui/material/Tooltip";
 // CAU HINH chung cho cac sx
 const MENU_STYLES = {
   color: "white",
@@ -42,13 +43,16 @@ function BoardBar({ board }) {
         },
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Chip
-          sx={MENU_STYLES}
-          icon={<DashboardIcon />}
-          label={board?.title}
-          clickable
-        />
+
+    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Tooltip title = {board?.description}>
+          <Chip
+            sx={MENU_STYLES}
+            icon={<DashboardIcon />}
+            label={board?.title}
+            clickable
+          />
+      </Tooltip>
         <Chip
           sx={MENU_STYLES}
           icon={<VpnLockIcon />}
