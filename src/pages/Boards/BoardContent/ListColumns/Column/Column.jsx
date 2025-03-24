@@ -16,7 +16,7 @@ import Button from "@mui/material/Button"
 import { useState } from "react"
 import { mapOrder } from "~/utils/sorts"
 import ListCards from "./ListCards/ListCards"
-
+import { toast } from "react-toastify";
 function Column({ column }) {
 
   
@@ -61,7 +61,7 @@ function Column({ column }) {
 
   const addNewCard = () => {
     if (!newCardTitle) {
-      // console.error('Please enter Column Title!')
+      toast.error('Please enter CARD Title!', { position: 'bottom-right'})
       return
     }
     // console.log(newColumnTitle)
@@ -156,6 +156,7 @@ function Column({ column }) {
                 size="small"
                 variant="outlined"
                 autoFocus
+                data-no-dnd="true"
                 value={newCardTitle} // lay value
                 // bat su kien go y chang nhu ben duoi
                 onChange={(e) => setNewCardTitle(e.target.value)}
@@ -178,6 +179,7 @@ function Column({ column }) {
               />
               <Box sx ={{display: 'flex', alignItems: 'center', gap: 1}}>
                 <Button 
+                  data-no-dnd="true"
                   onClick={addNewCard}
                   variant="contained" 
                   color = "success" 
