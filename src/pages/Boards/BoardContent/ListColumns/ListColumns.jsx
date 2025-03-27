@@ -11,20 +11,31 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import Column from "./Column/Column";
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setopenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setopenNewColumnForm(!openNewColumnForm)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter COLUMN title!')
       return
     }
     // console.log(newColumnTitle)
     // goi api o day
+    const newColumnData = {
+      title: newColumnTitle
+    }
 
+    /*
+    Gọi lên props function createNewColumn nằm ở component cha cao nhất (boards/_id.jsx)
+    Khi sử dụng Redux. Lúc này chúng ta có thể gọi luôn API ở đây là xong thay vì phải lần lượt gọi ngược lên những
+    component cha phía trên (đối với component con nằm càng sâu thì càng khó)
+    Tương lai sử dụng Redux thì sẽ clean code hơn
+
+    */
+    await createNewColumn(newColumnData)
     // dong form ban dau va clear input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -46,7 +57,7 @@ function ListColumns({ columns }) {
         }}
       >
         {columns?.map((column) => (
-          <Column key={column._id} column={column} />
+          <Column key={column._id} column={column} createNewCard = {createNewCard} />
         ))}
 
         {/* Box add new column */}
