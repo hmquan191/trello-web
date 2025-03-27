@@ -1,9 +1,9 @@
-import Box from "@mui/material/Box";
-import TrelloCard from "./Card/Card";
+import Box from '@mui/material/Box'
+import TrelloCard from './Card/Card'
 import {
   SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable'
 
 function ListCards({ cards }) {
   return (
@@ -13,13 +13,13 @@ function ListCards({ cards }) {
     >
       <Box
         sx={{
-          p: "0 5px 5px 5px", // padding
-          m: "0 5px", // margin
-          display: "flex",
-          flexDirection: "column",
+          p: '0 5px 5px 5px', // padding
+          m: '0 5px', // margin
+          display: 'flex',
+          flexDirection: 'column',
           gap: 1, // = 8px
-          overflowX: "hidden",
-          overflowY: "auto", // hiện thanh scroll
+          overflowX: 'hidden',
+          overflowY: 'auto', // hiện thanh scroll
           maxHeight: (theme) =>
             `calc(
           ${theme.trello.boardContentHeight} - 
@@ -27,10 +27,10 @@ function ListCards({ cards }) {
           ${theme.trello.columnHeaderHeight} -
           ${theme.trello.columnFooterHeight}
           )`,
-          "&::-webkit-scrollbar-thumb ": { backgroundColor: "ced0da" },
-          "&::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: "#bfc2cf",
-          },
+          '&::-webkit-scrollbar-thumb ': { backgroundColor: 'ced0da' },
+          '&::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: '#bfc2cf'
+          }
         }}
       >
         {cards?.map((card) => (
@@ -38,7 +38,7 @@ function ListCards({ cards }) {
         ))}
       </Box>
     </SortableContext>
-  );
+  )
 }
 
-export default ListCards;
+export default ListCards

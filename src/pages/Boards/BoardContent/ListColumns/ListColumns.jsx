@@ -1,15 +1,15 @@
 import {
   SortableContext,
-  horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import CloseIcon from "@mui/icons-material/Close";
-import TextField from "@mui/material/TextField";
-import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import { toast } from "react-toastify";
-import { useState } from "react";
-import Column from "./Column/Column";
+  horizontalListSortingStrategy
+} from '@dnd-kit/sortable'
+import CloseIcon from '@mui/icons-material/Close'
+import TextField from '@mui/material/TextField'
+import NoteAddIcon from '@mui/icons-material/NoteAdd'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import { toast } from 'react-toastify'
+import { useState } from 'react'
+import Column from './Column/Column'
 
 function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setopenNewColumnForm] = useState(false)
@@ -27,6 +27,11 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
     const newColumnData = {
       title: newColumnTitle
     }
+
+    if (newColumnData.title.length < 3) {
+      toast.error('COLUMN title must have more than 3 characters')
+    }
+
 
     /*
     Gọi lên props function createNewColumn nằm ở component cha cao nhất (boards/_id.jsx)
@@ -47,13 +52,13 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
     >
       <Box
         sx={{
-          bgColor: "inherit", // kế thừa của thằng cha
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          overflowX: "auto",
-          overflowY: "hidden",
-          "&::-webkit-scrollbar-track": { m: 2 },
+          bgColor: 'inherit', // kế thừa của thằng cha
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          '&::-webkit-scrollbar-track': { m: 2 }
         }}
       >
         {columns?.map((column) => (
@@ -62,21 +67,21 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
 
         {/* Box add new column */}
         {!openNewColumnForm
-        ? <Box onClick={toggleOpenNewColumnForm}
+          ? <Box onClick={toggleOpenNewColumnForm}
             sx={{
-              minWidth: "250px",
-              maxWidth: "250px",
+              minWidth: '250px',
+              maxWidth: '250px',
               mx: 2,
-              borderRadius: "6px",
-              height: "fit-content",
-              bgcolor: "#ffffff3d",
+              borderRadius: '6px',
+              height: 'fit-content',
+              bgcolor: '#ffffff3d'
             }}
           >
             <Button
               sx={{
-                color: "white",
-                width: "100%",
-                justifyContent: "flex-start",
+                color: 'white',
+                width: '100%',
+                justifyContent: 'flex-start',
                 pl: 2.5, // padding left
                 py: 1
               }}
@@ -85,7 +90,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
               Add new column
             </Button>
           </Box>
-        : <Box sx = {{
+          : <Box sx = {{
             minWidth: '250px',
             maxWidth: '250px',
             mx: 2,
@@ -96,7 +101,7 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
             display: 'flex',
             flexDirection: 'column',
             gap: 1
-        }}>        
+          }}>
             <TextField
               label="Enter column title..." //
               type="text"
@@ -107,28 +112,28 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
               // bat su kien go y chang nhu ben duoi
               onChange={(e) => setNewColumnTitle(e.target.value)}
               sx={{
-                "& label": { color: "white" },
-                "& input": { color: "white" },
-                "& label.Mui-focused": { color: "white" },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: "white" },
-                  "&:hover fieldset": { borderColor: "white" },
-                  "&.Mui-focused fieldset": { borderColor: "white" },
-                },
+                '& label': { color: 'white' },
+                '& input': { color: 'white' },
+                '& label.Mui-focused': { color: 'white' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: 'white' },
+                  '&:hover fieldset': { borderColor: 'white' },
+                  '&.Mui-focused fieldset': { borderColor: 'white' }
+                }
               }}
             />
-            <Box sx ={{display: 'flex', alignItems: 'center', gap: 1}}>
-              <Button 
+            <Box sx ={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Button
                 onClick={addNewColumn}
-                variant="contained" 
-                color = "success" 
+                variant="contained"
+                color = "success"
                 size = "small"
                 sx = {{
                   boxShadow: 'none',
                   border: '0.5px solid',
                   borderColor: (theme) => theme.palette.success.main,
-                  '&:hover': { bgColor: (theme) => theme.palette.success.main } 
-                }} 
+                  '&:hover': { bgColor: (theme) => theme.palette.success.main }
+                }}
               >Add Column</Button>
               <CloseIcon
                 onClick = {toggleOpenNewColumnForm}
@@ -140,11 +145,11 @@ function ListColumns({ columns, createNewColumn, createNewCard }) {
                 }}
               />
             </Box>
-        </Box>
+          </Box>
         }
       </Box>
     </SortableContext>
-  );
+  )
 }
 
-export default ListColumns;
+export default ListColumns
