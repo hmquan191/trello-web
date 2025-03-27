@@ -17,7 +17,7 @@ import { useState } from "react"
 import { mapOrder } from "~/utils/sorts"
 import ListCards from "./ListCards/ListCards"
 import { toast } from "react-toastify";
-function Column({ column }) {
+function Column({ column, createNewCard }) {
 
   
   const {
@@ -59,15 +59,21 @@ function Column({ column }) {
 
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Please enter CARD Title!', { position: 'bottom-right'})
       return
     }
-    // console.log(newColumnTitle)
-    // goi api o day
 
-    // dong form ban dau va clear input
+    // tạo dữ liệu card để gọi API
+    const newCardData = {
+      title: newCardTitle,
+      columnId: column._id
+    }
+
+    await createNewCard(newCardData)
+
+    // dong card ban dau va clear input
     toggleOpenNewCardForm()
     setNewCardTitle('')
   }  
